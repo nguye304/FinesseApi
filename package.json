@@ -1,0 +1,22 @@
+{
+  "name": "finesseapi",
+  "version": "1.0.0",
+  "description": "Finesse Nails api",
+  "main": "index.js",
+  "scripts": {
+    "test": "fTest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguye304/FinesseApi.git"
+  },
+  "author": "Kevin Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nguye304/FinesseApi/issues"
+  },
+  "homepage": "https://github.com/nguye304/FinesseApi#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
