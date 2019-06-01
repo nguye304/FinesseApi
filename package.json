@@ -4,7 +4,8 @@
   "description": "Finesse Nails api",
   "main": "index.js",
   "scripts": {
-    "test": "fTest"
+    "test": "fTest",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,8 @@
   },
   "homepage": "https://github.com/nguye304/FinesseApi#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lodash": "^4.17.11"
   }
 }

@@ -5,14 +5,29 @@ const express = require('express');
 const app = express();
 const Joi = require('joi');
 const mysql = require ('mysql');
+const cors = require ('cors');
+
+process.env.NODE_ENV = 'production';
+const config = require('./config.js');
+
+app.use(express.json());
+app.use(cors());
+
+process.env.rds_hostname=config.rds_hostname;
+process.env.rds_username=config.rds_username;
+process.env.rds_password=config.rds_password;
+process.env.rds_database=config.rds_database;
+process.env.rds_port=config.rds_port;
 
 var connection = mysql.createConnection({
-    host: process.env.RDS_HOSTNAME,
-    user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
-    port: process.env.RDS_PORT,
-    database: process.env.RDS_DATABASE
+    host: process.env.rds_hostname,
+    user: process.env.rds_username,
+    password: process.env.rds_password,
+    port: process.env.rds_port,
+    database: process.env.rds_database
 });
+
+
 
 connection.connect(function(err){
     if(err){
@@ -24,7 +39,7 @@ connection.connect(function(err){
 
 
 
-app.use(express.json());
+
 
 function validateEmployee(employee){
     const schema = {
@@ -261,6 +276,78 @@ app.delete('/api/services/:id',(req,res)=>{
 
 });
 
+//GET: api/holidays
+//returns all the holidays wit their hours
+app.get('/api/holidays', (req, res) => {
+    connection.query(`SELECT * FROM Holidays`,function(err,result){
+        if(err) {
+            res.send(err);
+            return;
+        }
+        res.send(result);
+    })
+});
+//DELETE: api/holidays/id (Deletes a holiday by it's id
+app.delete('/api/holidays/:id',(req,res)=>{
+    var query = `DELETE FROM Holidays WHERE HolidayID = ${parseInt(req.params.id)}`;
+    connection.query(query,function(err,result){
+        if(err){
+            message=err;
+        }
+        else{
+            message = `Successfully Removed Hoiday with id ${req.params.id}`
+        }
+        res.send(message);
+    })  
+
+
+});
+//POST: api/holidays (Adds a new service incase here are new services)
+app.post('/api/holidays', (req, res) => {
+    
+  
+    //assign the body to an object
+    const holiday = {
+        //id:employees.length+1,
+        HolidayName:req.body.HolidayName,
+        HolidayDate:req.body.HolidayDate,
+        OpenHours:req.body.OpenHours,
+        CloseHours:req.body.CloseHours
+    
+    };
+    //The query that will add a new service into the database
+    var holiQuery = 
+        `INSERT INTO Holidays(HolidayName,HolidayDate,OpenHours,CloseHours) 
+         VALUES('${holiday.HolidayName}','${holiday.HolidayDate}','${holiday.OpenHours}','${holiday.CloseHours}')`;
+    connection.query(holiQuery,function(err,result){
+        if(err){
+            message = err;
+        }
+        else{
+            message = `Successfully added ${holiday.HolidayName}`;
+        }
+        res.send(message);
+    })
+});
+
+//PUT: api/holidays  
+//TODO: Update the holiday
+app.put('/api/holidays/:id',(req,res)=>{
+    if(req.body.OpenHours ==null){
+        myquery = `UPDATE Holidays SET CloseHours = "${req.body.CloseHours}" WHERE HolidayID = "${parseInt(req.params.id)}"`;
+    }else if(req.body.CloseHours==null){
+        myquery = `UPDATE Holidays SET OpenHours="${req.body.OpenHours}" WHERE HolidayID = "${parseInt(req.params.id)}"`;
+    }else{
+        myquery = `UPDATE Holidays SET OpenHours="${req.body.OpenHours}", HolidayDate = "${req.body.HolidayDate}",CloseHours = "${req.body.CloseHours}" WHERE HolidayID = "${parseInt(req.params.id)}"`;
+    }
+    connection.query(myquery,function(err,result){
+        if(err) {
+            res.send(err);
+            return;
+        }
+        res.send(`Successfully updated information for holiday with id: ${req.body.id}`);
+    })
+});
 
 //connection.end();
 //For Testing 
