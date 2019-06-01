@@ -13,18 +13,18 @@ const config = require('./config.js');
 app.use(express.json());
 app.use(cors());
 
-process.env.rds_hostname=config.rds_hostname;
-process.env.rds_username=config.rds_username;
-process.env.rds_password=config.rds_password;
-process.env.rds_database=config.rds_database;
-process.env.rds_port=config.rds_port;
+process.env.RDS_HOSTNAME=config.RDS_HOSTNAME;
+process.env.RDS_USERNAME=config.RDS_USERNAME;
+process.env.RDS_PASSWORD=config.RDS_PASSWORD;
+process.env.RDS_DATABASE=config.RDS_DATABASE;
+process.env.RDS_PORT=config.RDS_PORT;
 
 var connection = mysql.createConnection({
-    host: process.env.rds_hostname,
-    user: process.env.rds_username,
-    password: process.env.rds_password,
-    port: process.env.rds_port,
-    database: process.env.rds_database
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    port: process.env.RDS_PORT,
+    database: process.env.RDS_DATABASE
 });
 
 
