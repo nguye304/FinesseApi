@@ -1,25 +1,16 @@
 {
   "name": "finesseapi",
-  "version": "1.0.0",
-  "description": "Finesse Nails api",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "fTest",
-    "start": "node index.js"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nguye304/FinesseApi.git"
-  },
-  "author": "Kevin Nguyen",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/nguye304/FinesseApi/issues"
-  },
-  "homepage": "https://github.com/nguye304/FinesseApi#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "lodash": "^4.17.11"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1"
   }
 }
