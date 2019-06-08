@@ -2,15 +2,15 @@
 //option 2 = search by name
 
 const express = require('express');
-const app = express.Router();
+const router = express.Router();
 const mysql = require ('mysql');
 const cors = require ('cors');
 
 process.env.NODE_ENV = 'production';
 const config = require('../config.js');
 
-app.use(express.json());
-app.use(cors());
+router.use(express.json());
+router.use(cors());
 
 process.env.RDS_HOSTNAME=config.RDS_HOSTNAME;
 process.env.RDS_USERNAME=config.RDS_USERNAME;
@@ -38,13 +38,13 @@ connection.connect(function(err){
 
 
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.send('hello world');
 });
 
 //GET: api/employees
 //Returns all the employees
-app.get('/api/employees', (req, res) => {
+router.get('/api/employees', (req, res) => {
 
     connection.query('SELECT * FROM Employees',function(error,results,fields){
         if(error) {
@@ -58,7 +58,7 @@ app.get('/api/employees', (req, res) => {
 
 //GET: api/employees/1/id
 //Returns an employee by their ID. There will only be a single ID 
-app.get('/api/1/employees/:id', (req, res) => {
+router.get('/api/1/employees/:id', (req, res) => {
     connection.query(`SELECT * FROM Employees WHERE EmpID=${parseInt(req.params.id)}`,function(err,result){
         if(err) {
             res.send(err);
@@ -77,7 +77,7 @@ app.get('/api/1/employees/:id', (req, res) => {
 
 //GET: api/employees/2/name
 //Returns employees by their first name. There could be multiple people with that name
-app.get('/api/2/employees/:name', (req, res) => { 
+router.get('/api/2/employees/:name', (req, res) => { 
     connection.query(`SELECT * FROM Employees WHERE FName="${req.params.name}"`,function(err,result){
         if(err) {
             res.send(err);
@@ -93,7 +93,7 @@ app.get('/api/2/employees/:name', (req, res) => {
 
 //GET: api/hours
 //Returns the hours with date 
-app.get('/api/hours', (req, res) => {
+router.get('/api/hours', (req, res) => {
      connection.query(`SELECT * FROM StoreInfo`,function(err,result){
         if(err) {
             res.send("there was an error in get all hours");
@@ -105,7 +105,7 @@ app.get('/api/hours', (req, res) => {
 
 //GET: api/services/
 //returns all the services wit their prices an a description
-app.get('/api/services', (req, res) => {
+router.get('/api/services', (req, res) => {
     connection.query(`SELECT * FROM Services`,function(err,result){
         if(err) {
             res.send(err);
@@ -116,7 +116,7 @@ app.get('/api/services', (req, res) => {
 });
 //PUT: api/employee/id
 //TODO: Update the employees (Updates the employees information)
-app.put('/api/employees/:id',(req,res)=>{
+router.put('/api/employees/:id',(req,res)=>{
     const employee = {
         FName:req.body.FName,
         LName:req.body.LName,
@@ -148,7 +148,7 @@ app.put('/api/employees/:id',(req,res)=>{
 
 //GET: api/hours
 //TODO: Gets all information from storeinfo
-app.get('/api/storeInfo', (req, res) => {
+router.get('/api/storeInfo', (req, res) => {
     connection.query("SELECT * FROM StoreInfo",function(err,result){
         if(err) {
             res.send(err);
@@ -160,7 +160,7 @@ app.get('/api/storeInfo', (req, res) => {
 
 //PUT: api/hours  
 //TODO: Update the hours
-app.put('/api/storeInfo',(req,res)=>{
+router.put('/api/storeInfo',(req,res)=>{
     if(req.body.OpenHours ==null){
         myquery = `UPDATE StoreInfo SET CloseHours = "${req.body.CloseHours}" WHERE Day = "${req.body.Day}"`;
     }else if(req.body.CloseHours==null){
@@ -178,7 +178,7 @@ app.put('/api/storeInfo',(req,res)=>{
 });
 
 //POST: api/employee (Adds a new employee incase someone is hired)
-app.post('/api/employees', (req, res) => {
+router.post('/api/employees', (req, res) => {
     
   
     //assign the body to an object
@@ -208,7 +208,7 @@ app.post('/api/employees', (req, res) => {
     })
 });
 //DELETE: api/employees/id (Deletes an employee incase someone is fired)
-app.delete('/api/employees/:id',(req,res)=>{
+router.delete('/api/employees/:id',(req,res)=>{
     var query = `DELETE FROM Employees WHERE EmpID = ${parseInt(req.params.id)}`;
     connection.query(query,function(err,result){
         if(err){
@@ -221,7 +221,7 @@ app.delete('/api/employees/:id',(req,res)=>{
     })
 });
 //POST: api/services (Adds a new service incase here are new services)
-app.post('/api/services', (req, res) => {
+router.post('/api/services', (req, res) => {
     
   
     //assign the body to an object
@@ -250,7 +250,7 @@ app.post('/api/services', (req, res) => {
 });
 
 //DELETE: api/services/id (Deletes a service by it's id)
-app.delete('/api/services/:id',(req,res)=>{
+router.delete('/api/services/:id',(req,res)=>{
     var query = `DELETE FROM Services WHERE ItemID = ${parseInt(req.params.id)}`;
     connection.query(query,function(err,result){
         if(err){
@@ -267,7 +267,7 @@ app.delete('/api/services/:id',(req,res)=>{
 
 //GET: api/holidays
 //returns all the holidays wit their hours
-app.get('/api/holidays', (req, res) => {
+router.get('/api/holidays', (req, res) => {
     connection.query(`SELECT * FROM Holidays`,function(err,result){
         if(err) {
             res.send(err);
@@ -277,7 +277,7 @@ app.get('/api/holidays', (req, res) => {
     })
 });
 //DELETE: api/holidays/id (Deletes a holiday by it's id
-app.delete('/api/holidays/:id',(req,res)=>{
+router.delete('/api/holidays/:id',(req,res)=>{
     var query = `DELETE FROM Holidays WHERE HolidayID = ${parseInt(req.params.id)}`;
     connection.query(query,function(err,result){
         if(err){
@@ -292,7 +292,7 @@ app.delete('/api/holidays/:id',(req,res)=>{
 
 });
 //POST: api/holidays (Adds a new service incase here are new services)
-app.post('/api/holidays', (req, res) => {
+router.post('/api/holidays', (req, res) => {
     
   
     //assign the body to an object
@@ -321,7 +321,7 @@ app.post('/api/holidays', (req, res) => {
 
 //PUT: api/holidays  
 //TODO: Update the holiday
-app.put('/api/holidays/:id',(req,res)=>{
+router.put('/api/holidays/:id',(req,res)=>{
     if(req.body.OpenHours ==null){
         myquery = `UPDATE Holidays SET CloseHours = "${req.body.CloseHours}" WHERE HolidayID = "${parseInt(req.params.id)}"`;
     }else if(req.body.CloseHours==null){
@@ -343,4 +343,4 @@ app.put('/api/holidays/:id',(req,res)=>{
 const port = process.env.PORT || 3000;
 //app.listen(port, () => console.log(`Listening on port ${port}`));
 
-module.exports = app;
+module.exports = router;
