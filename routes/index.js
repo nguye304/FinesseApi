@@ -2,8 +2,7 @@
 //option 2 = search by name
 
 const express = require('express');
-const app = express();
-const Joi = require('joi');
+const app = express.Router();
 const mysql = require ('mysql');
 const cors = require ('cors');
 
@@ -38,16 +37,6 @@ connection.connect(function(err){
 });
 
 
-
-
-
-function validateEmployee(employee){
-    const schema = {
-        FName:Joi.string().min(3).required()
-    }
-    return Joi.validate(employee,schema)
-
-};
 
 app.get('/', (req, res) => {
     res.send('hello world');
@@ -352,4 +341,6 @@ app.put('/api/holidays/:id',(req,res)=>{
 //connection.end();
 //For Testing 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+//app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;
