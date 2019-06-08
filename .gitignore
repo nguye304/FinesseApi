@@ -65,4 +65,5 @@ typings/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-get-pip.py
+# ignore config.js
+config.js
